@@ -1,0 +1,129 @@
+---
+- name: Install packages
+  hosts: all
+  become: true
+
+  vars:
+    php_version: 
+    nginx_version:
+    mysql_version:
+    redis_version:
+    phpmyadmin_version:
+    redisadmin_version:
+
+    php_modules:
+     - php-cli
+     - php-common
+     - php-gd
+
+  tasks:
+    - block: #block for RedHat
+
+      - name: install php
+        yum:
+         name: "php{{ php_version }}"
+         state: present
+        tags:
+         - php
+
+      - name: install nginx
+        yum:
+         name: "nginx{{ nginx_version }}"
+         state: present
+        tags:
+         - nginx
+
+      - name: install mysql
+        yum:
+         name: "mysql{{ mysql_version }}"
+         state: present
+        tags:
+         - mysql
+
+      - name: install redis
+        yum:
+         name: "redis{{ redis_version }}"
+         state: present
+        tags:
+         - redis
+
+      - name: install phpmyadmin
+        yum:
+         name: "phpmyadmin{{ phpmyadmin_version }}"
+         state: present
+        tags:
+         - phpmyadmin
+
+      - name: install redisadmin
+        yum:
+         name: "redisadmin{{ redisadmin_version }}"
+         state: present
+        tags:
+         - redisadmin
+
+      - name: install php_modules
+        yum:
+         name: "{{ php_modules }}"
+         state: present
+        tags:
+         - php_modules      
+
+      when: ansible_os_family == "RedHat"
+
+
+    - block: #block for Debian
+
+      - name: Only update cache
+        apt:
+         update_cache: yes
+                
+      - name: install php
+        apt:
+         name: "php{{ php_version }}"
+         state: present
+        tags:
+         - php
+
+      - name: install nginx
+        apt:
+         name: "nginx{{ nginx_version }}"
+         state: present
+        tags:
+         - nginx
+
+      - name: install mysql
+        apt:
+         name: "mysql{{ mysql_version }}"
+         state: present
+        tags:
+         - mysql
+
+      - apt: install redis
+        apt:
+         name: "redis{{ redis_version }}"
+         state: present
+        tags:
+         - redis
+
+      - name: install phpmyadmin
+        apt:
+         name: "phpmyadmin{{ phpmyadmin_version }}"
+         state: present
+        tags:
+         - phpmyadmin
+
+      - name: install redisadmin
+        apt:
+         name: "redisadmin{{ redisadmin_version }}"
+         state: present
+        tags:
+         - redisadmin
+
+      - apt: install php_modules
+        apt:
+         name: "{{ php_modules }}"
+         state: present
+        tags:
+         - php_modules      
+
+      when: ansible_os_family == "Debian"
